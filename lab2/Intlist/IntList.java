@@ -1,4 +1,5 @@
 import java.util.Formatter;
+import java.util.List;
 
 /**
  * A naked recursive list of integers, similar to what we saw in lecture 3, but
@@ -29,7 +30,7 @@ public class IntList {
      * A List with null rest, and first = 0.
      */
     public IntList() {
-    /* NOTE: public IntList () { }  would also work. */
+        /* NOTE: public IntList () { }  would also work. */
         this(0, null);
     }
 
@@ -79,19 +80,43 @@ public class IntList {
      * Returns a list consisting of the elements of A followed by the
      * *  elements of B.  May modify items of A. Don't use 'new'.
      */
-
+    // 破坏性连接（迭代方法）
     public static IntList dcatenate(IntList A, IntList B) {
-        //TODO:  fill in method
-        return null;
+        if (A == null) {
+            return B;
+        }
+        //使用临时变量 p 遍历至 A 的尾部
+        IntList p = A;
+        while (p.rest != null) {
+            p = p.rest;
+        }
+
+        p.rest = B;
+        return A;
     }
+    /* 递归实现此破坏性连接的
+      if (A == null) {
+          return B;
+      }
+      A.rest = decatentate(A.rest, B);
+      return A;
+      */
+
+
 
     /**
      * Returns a list consisting of the elements of A followed by the
      * * elements of B.  May NOT modify items of A.  Use 'new'.
      */
+    //非破坏性连接（递归实现）
     public static IntList catenate(IntList A, IntList B) {
-        //TODO:  fill in method
-        return null;
+        if (A == null) {
+            return B;
+        }
+        if (A.rest == null) {
+            return new IntList(A.first, B);
+        }
+        return new IntList(A.first, catenate(A.rest, B));
     }
 
 

@@ -3,38 +3,21 @@
  * Code adapted from https://stackoverflow.com/questions/4895173/bitwise-multiply-and-add-in-java and https://stackoverflow.com/questions/1533131/what-useful-bitwise-operator-code-tricks-should-a-developer-know-about
  */
 public class DebugExercise2 {
-    /** Returns the max of a and b. Do not step into this function. 
-      * This function may have a bug, but if it does, you should find it
-      * by stepping over, not into. */
+    /** Returns the max of a and b. */
     public static int max(int a, int b) {
-        int w = (b - a) >> 31;
-        /* If you're stepping into this function, click the
-           step out button because you're not going to learn anything. */
-        int z = ~(b - a) >> 31;
-
-        int max = b & w | a & z;
-        return max;
+        int diff = a - b;
+        int sign = (diff >> 31) & 1; // 0 if a >= b, 1 if a < b
+        return a - sign * diff; // If a < b, return b; else return a
     }
 
-
-    /** Returns the sum of a and b. Do not step into this function. 
-      * This function may have a bug, but if it does, you should find it
-      * by stepping over, not into. */    
+    /** Returns the sum of a and b using bitwise operations. */
     public static int add(int a, int b) {
-        int x = a, y = b;
-        /* If you're stepping into this function, click the
-           step out button because you're not going to learn anything. */
-        int xor, and, temp;
-        and = x & y;
-        xor = x ^ y;
-
-        while (and != 0) {
-            and <<= 1;
-            temp = xor ^ and;
-            and &= xor;
-            xor = temp;
+        while (b != 0) {
+            int carry = a & b;
+            a = a ^ b;
+            b = carry << 1;
         }
-        return xor;
+        return a;
     }
 
     /** Returns a new array where entry i is the max of
@@ -60,7 +43,7 @@ public class DebugExercise2 {
         int i = 0;
         int sum = 0;
         while (i < x.length) {
-            sum = sum + add(sum, x[i]);
+            sum = add(sum, x[i]);
             i = i + 1;
         }
         return sum;
@@ -82,6 +65,6 @@ public class DebugExercise2 {
         int[] b = {3, -3, 2, -1};
 
         int sumOfElementwiseMaxes = sumOfElementwiseMaxes(a, b);
-        System.out.println(sumOfElementwiseMaxes);
+        System.out.println("Sum of Element-wise Maxes: " + sumOfElementwiseMaxes);
     }
 }
